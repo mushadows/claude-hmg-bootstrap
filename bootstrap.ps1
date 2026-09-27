@@ -2,12 +2,13 @@
 # Installe Git for Windows si absent, clone le repo prive claude-hmg-context (authentification GitHub via
 # Git Credential Manager, fenetre de navigateur), puis lance son setup/install.ps1.
 #
+# BRANCHE DE TEST - pointe sur claude-hmg-context-test (miroir jetable), jamais sur le repo prod.
 # Usage (ouvrir PowerShell en tant qu'administrateur, puis coller) :
-#   irm https://raw.githubusercontent.com/mushadows/claude-hmg-bootstrap/main/bootstrap.ps1 | iex
+#   irm https://raw.githubusercontent.com/mushadows/claude-hmg-bootstrap/test/bootstrap.ps1 | iex
 $ErrorActionPreference = 'Stop'
 
-$RepoUrl = 'https://github.com/mushadows/claude-hmg-context.git'
-$Dest = Join-Path $env:USERPROFILE 'dev\claude-hmg-context'
+$RepoUrl = 'https://github.com/mushadows/claude-hmg-context-test.git'
+$Dest = Join-Path $env:USERPROFILE 'dev\claude-hmg-context-test'
 
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if (-not $isAdmin) {
