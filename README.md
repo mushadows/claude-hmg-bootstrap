@@ -13,8 +13,8 @@ irm https://raw.githubusercontent.com/mushadows/claude-hmg-bootstrap/main/bootst
 
 Ce que ça fait :
 1. Installe Git for Windows via `winget` s'il est absent
-2. Clone `claude-hmg-context` (privé — une fenêtre de connexion GitHub s'ouvre ; il faut avoir été invité comme
-   collaborateur sur ce repo au préalable)
+2. Clone `claude-hmg-context` dans `C:\hmg\claude-hmg-context` (privé — une fenêtre de connexion GitHub
+   s'ouvre ; il faut avoir été invité comme collaborateur sur ce repo au préalable)
 3. Lance `setup/install.ps1` du repo cloné, qui installe Claude Code CLI si besoin et termine la configuration
 
 ## Pourquoi un repo à part

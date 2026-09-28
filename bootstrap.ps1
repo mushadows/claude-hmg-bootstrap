@@ -7,7 +7,7 @@
 $ErrorActionPreference = 'Stop'
 
 $RepoUrl = 'https://github.com/mushadows/claude-hmg-context.git'
-$Dest = Join-Path $env:USERPROFILE 'dev\claude-hmg-context'
+$Dest = 'C:\hmg\claude-hmg-context'
 
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if (-not $isAdmin) {
@@ -21,15 +21,18 @@ function Sync-PathFromMachine {
 }
 
 if (-not (Test-Cmd 'git')) {
-  if (-not (Test-Cmd 'winget')) {
-    Write-Error "winget introuvable - installe 'App Installer' depuis le Microsoft Store, puis relance cette commande."
-    exit 1
+  if (Test-Cmd 'winget') {
+    Write-Host "Git introuvable - installation via winget (scope machine)..."
+    # --scope machine : evite qu'une elevation via un compte admin SEPARE du compte local (identifiants
+    # differents, cas frequent si le compte local n'est pas dans le groupe Administrateurs) installe dans
+    # le profil de ce compte admin, invisible ensuite pour le compte local (incident reel du 2026-09-28).
+    winget install --id Git.Git -e --source winget --scope machine --accept-package-agreements --accept-source-agreements
+    Sync-PathFromMachine
   }
-  Write-Host "Git introuvable - installation via winget..."
-  winget install --id Git.Git -e --source winget --accept-package-agreements --accept-source-agreements
-  Sync-PathFromMachine
   if (-not (Test-Cmd 'git')) {
-    Write-Error "Git installe mais introuvable dans cette session - ferme ce terminal, rouvre un PowerShell administrateur et relance la commande."
+    # winget peut etre absent OU bloque par politique entreprise - pas d'equivalent npm pour Git (ce n'est
+    # pas un paquet Node), donc pas de fallback automatise possible ici.
+    Write-Error "Git introuvable et l'installation via winget a echoue (absent, bloque par politique entreprise, ou pas encore detecte dans cette session) - installe Git for Windows manuellement (https://git-scm.com/download/win) puis relance cette commande."
     exit 1
   }
 }
