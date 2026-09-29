@@ -11,7 +11,15 @@
 $ErrorActionPreference = 'Stop'
 
 $RepoUrl = 'https://github.com/mushadows/claude-hmg-context.git'
-$Dest = 'C:\hmg\claude-hmg-context'
+
+$Dest = ''
+while ([string]::IsNullOrWhiteSpace($Dest)) {
+  $Dest = Read-Host "Ou installer claude-hmg-context ? (chemin complet, ex: C:\hmg\claude-hmg-context)"
+  if ([string]::IsNullOrWhiteSpace($Dest)) {
+    Write-Warning "Un chemin est requis - il n'y a pas de valeur par defaut."
+  }
+}
+$Dest = $Dest.Trim().Trim('"')
 
 function Test-Cmd([string]$name) { [bool](Get-Command $name -ErrorAction SilentlyContinue) }
 function Sync-PathFromMachine {
@@ -115,9 +123,9 @@ try {
     git -C $Dest pull --ff-only
   }
 } catch {
-  # C:\hmg peut etre en lecture seule pour un compte non-admin sur un poste verrouille - Git lui-meme ne
-  # necessite pas d'admin, mais creer un dossier a la racine de C: si.
-  Write-Error "Impossible de creer/ecrire dans $Dest ($_) - si ton compte n'a pas le droit de creer de dossier a la racine de C:\, demande a un admin de creer C:\hmg une fois (droits d'ecriture pour ton compte), ou relance cette commande depuis un PowerShell administrateur juste pour cette etape."
+  # Le dossier parent choisi peut etre en lecture seule pour un compte non-admin sur un poste verrouille -
+  # Git lui-meme ne necessite pas d'admin, mais creer un dossier a cet emplacement si.
+  Write-Error "Impossible de creer/ecrire dans $Dest ($_) - si ton compte n'a pas le droit de creer de dossier a cet emplacement, choisis un autre chemin (ex: dans ton profil utilisateur), demande a un admin de creer le dossier parent (droits d'ecriture pour ton compte), ou relance cette commande depuis un PowerShell administrateur juste pour cette etape."
   exit 1
 }
 
